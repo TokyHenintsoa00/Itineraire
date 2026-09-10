@@ -1,22 +1,11 @@
 package com.example.madatransport
 
+import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.madatransport.ui.theme.MadaTransportTheme
+import android.preference.PreferenceManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.graphics.Color
-import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatActivity
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -24,7 +13,8 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
-class MainActivity : ComponentActivity() {
+
+class MainActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
     private val madaService = MadaTransportService()
@@ -120,21 +110,5 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         mapView.onPause()
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MadaTransportTheme {
-        Greeting("Android")
     }
 }
