@@ -172,6 +172,7 @@ fun HomeScreen(
 
 //ecnran de recherche
 @Composable
+@Composable
 fun SearchScreen(
     retourAccueil: () -> Unit
 ) {
@@ -182,6 +183,18 @@ fun SearchScreen(
 
     var destination by remember {
         mutableStateOf("")
+    }
+
+    var resultat by remember {
+        mutableStateOf<com.example.itineraire.model.RouteResult?>(null)
+    }
+
+    var erreur by remember {
+        mutableStateOf("")
+    }
+
+    val repository = remember {
+        com.example.itineraire.data.TransportRepository()
     }
 
     Column(
@@ -239,13 +252,38 @@ fun SearchScreen(
         Button(
             onClick = {
 
-                // La recherche réelle sera programmée
-                // à l'étape suivante.
+                resultat = repository.rechercherItineraire(
+                    depart,
+                    destination
+                )
+
+                erreur = if (resultat == null) {
+                    "Aucun itinéraire trouvé."
+                } else {
+                    ""
+                }
 
             },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("🔎 Rechercher l'itinéraire")
+        }
+
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
+
+        if (erreur.isNotEmpty()) {
+
+            Text(
+                text = erreur,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+
+        resultat?.let { route ->
+
+            RouteResultCard(route)
         }
 
         Spacer(
@@ -260,5 +298,58 @@ fun SearchScreen(
         ) {
             Text("← Retour")
         }
+    }
+}
+@Composable
+fun RouteResultCard(
+    route: com.example.itineraire.model.RouteResult
+) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp)
+    ) {
+
+        Text(
+            text = "Itinéraire recommandé ⭐",
+            style = MaterialTheme.typography.titleLarge
+        )
+
+        Spacer(
+            modifier = Modifier.height(12.dp)
+        )
+
+        route.etapes.forEach { etape ->
+
+            if (etape.ligne == null) {
+
+                Text(
+                    text = "🚶 ${etape.lieu} — ${etape.duree} min"
+                )
+
+            } else {
+
+                Text(
+                    text = "🚌 Ligne ${etape.ligne} → ${etape.lieu} — ${etape.duree} min"
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.height(6.dp)
+            )
+        }
+
+        Spacer(
+            modifier = Modifier.height(12.dp)
+        )
+
+        Text(
+            text = "Durée totale : ${route.dureeTotale} min"
+        )
+
+        Text(
+            text = "Tarif total : ${route.tarifTotal} Ar"
+        )
     }
 }
