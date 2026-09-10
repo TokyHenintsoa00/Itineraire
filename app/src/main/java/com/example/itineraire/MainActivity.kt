@@ -31,6 +31,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MadaTransportApp()
+            //LinesScreen()
         }
     }
 }
@@ -130,7 +131,9 @@ fun HomeScreen(
         ) {
 
             OutlinedButton(
-                onClick = {},
+                onClick = {
+                    // temporairement
+                },
                 modifier = Modifier.weight(1f)
             ) {
                 Text("🚌 Lignes")
@@ -171,7 +174,6 @@ fun HomeScreen(
 }
 
 //ecnran de recherche
-@Composable
 @Composable
 fun SearchScreen(
     retourAccueil: () -> Unit
@@ -351,5 +353,77 @@ fun RouteResultCard(
         Text(
             text = "Tarif total : ${route.tarifTotal} Ar"
         )
+    }
+}
+@Composable
+fun LinesScreen() {
+
+    val repository = remember {
+        com.example.itineraire.data.TransportRepository()
+    }
+
+    val lignes = repository.obtenirLignes()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp)
+    ) {
+
+        Text(
+            text = "Lignes Taxi-be",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(
+            modifier = Modifier.height(20.dp)
+        )
+
+        lignes.forEach { ligne ->
+
+            LineCard(ligne)
+
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun LineCard(
+    ligne: com.example.itineraire.model.TransportLine
+) {
+
+    androidx.compose.material3.Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+
+            Text(
+                text = "🚌 Ligne ${ligne.numero}",
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Text(
+                text = ligne.nom
+            )
+
+            Text(
+                text = "📍 ${ligne.terminusDepart} → ${ligne.terminusArrivee}"
+            )
+
+            Text(
+                text = "💰 Tarif : ${ligne.tarif} Ar"
+            )
+
+            Text(
+                text = "Statut : ${ligne.statut}"
+            )
+        }
     }
 }
