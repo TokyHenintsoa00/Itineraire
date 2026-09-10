@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F5F5F5">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🚌 MadaTransport"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#1E88E5"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/etDepart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Départ (ex: Ankatso)"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/etDestination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Destination (ex: Analakely)"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btnRechercher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🔎 Rechercher &amp; Afficher la Carte"
+            android:backgroundTint="#1E88E5"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/tvResultat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Entrez un départ et une destination."
+            android:textSize="14sp" />
+
+        <!-- Composant Carte OpenStreetMap -->
+        <org.osmdroid.views.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+</ScrollView>
