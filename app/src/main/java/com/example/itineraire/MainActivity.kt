@@ -23,7 +23,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,37 +39,206 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//@Composable
+//fun MadaTransportApp() {
+//
+//    var ecranRecherche by remember {
+//        mutableStateOf(false)
+//    }
+//
+//    MaterialTheme {
+//
+//        if (ecranRecherche) {
+//
+//            SearchScreen(
+//                retourAccueil = {
+//                    ecranRecherche = false
+//                }
+//            )
+//
+//        } else {
+//
+//            HomeScreen(
+//                ouvrirRecherche = {
+//                    ecranRecherche = true
+//                }
+//            )
+//        }
+//    }
+//}
 @Composable
 fun MadaTransportApp() {
 
-    var ecranRecherche by remember {
-        mutableStateOf(false)
-    }
+    val navController = rememberNavController()
 
-    MaterialTheme {
+    NavHost(
+        navController = navController,
+        startDestination = "accueil"
+    ) {
 
-        if (ecranRecherche) {
-
-            SearchScreen(
-                retourAccueil = {
-                    ecranRecherche = false
-                }
-            )
-
-        } else {
+        composable("accueil") {
 
             HomeScreen(
                 ouvrirRecherche = {
-                    ecranRecherche = true
+                    navController.navigate("recherche")
+                },
+                ouvrirLignes = {
+                    navController.navigate("lignes")
+                },
+                ouvrirCarte = {
+                    navController.navigate("carte")
+                },
+                ouvrirAlertes = {
+                    navController.navigate("alertes")
+                },
+                ouvrirProfil = {
+                    navController.navigate("profil")
                 }
             )
+        }
+
+        composable("recherche") {
+
+            SearchScreen(
+                retourAccueil = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable("lignes") {
+            LinesScreen()
+        }
+
+        composable("carte") {
+            MapScreen()
+        }
+
+        composable("alertes") {
+            AlertsScreen()
+        }
+
+        composable("profil") {
+            ProfileScreen()
         }
     }
 }
 // ecran d'acceuil
+//@Composable
+//fun HomeScreen(
+//    ouvrirRecherche: () -> Unit
+//) {
+//
+//    var destination by remember {
+//        mutableStateOf("")
+//    }
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .padding(24.dp),
+//        verticalArrangement = Arrangement.Center
+//    ) {
+//
+//        Text(
+//            text = "MadaTransport",
+//            style = MaterialTheme.typography.headlineLarge
+//        )
+//
+//        Spacer(
+//            modifier = Modifier.height(16.dp)
+//        )
+//
+//        Text(
+//            text = "Trouvez votre itinéraire en Taxi-be"
+//        )
+//
+//        Spacer(
+//            modifier = Modifier.height(24.dp)
+//        )
+//
+//        OutlinedTextField(
+//            value = destination,
+//            onValueChange = {
+//                destination = it
+//            },
+//            label = {
+//                Text("Où allez-vous ?")
+//            },
+//            modifier = Modifier.fillMaxWidth()
+//        )
+//
+//        Spacer(
+//            modifier = Modifier.height(16.dp)
+//        )
+//
+//        Button(
+//            onClick = {
+//                ouvrirRecherche()
+//            },
+//            modifier = Modifier.fillMaxWidth()
+//        ) {
+//            Text("🔎 Rechercher")
+//        }
+//
+//        Spacer(
+//            modifier = Modifier.height(24.dp)
+//        )
+//
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.spacedBy(8.dp)
+//        ) {
+//
+//            OutlinedButton(
+//                onClick = {
+//                    // temporairement
+//                },
+//                modifier = Modifier.weight(1f)
+//            ) {
+//                Text("🚌 Lignes")
+//            }
+//
+//            OutlinedButton(
+//                onClick = {},
+//                modifier = Modifier.weight(1f)
+//            ) {
+//                Text("📍 Carte")
+//            }
+//        }
+//
+//        Spacer(
+//            modifier = Modifier.height(8.dp)
+//        )
+//
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.spacedBy(8.dp)
+//        ) {
+//
+//            OutlinedButton(
+//                onClick = {},
+//                modifier = Modifier.weight(1f)
+//            ) {
+//                Text("⚠️ Alertes")
+//            }
+//
+//            OutlinedButton(
+//                onClick = {},
+//                modifier = Modifier.weight(1f)
+//            ) {
+//                Text("👤 Profil")
+//            }
+//        }
+//    }
+//}
 @Composable
 fun HomeScreen(
-    ouvrirRecherche: () -> Unit
+    ouvrirRecherche: () -> Unit,
+    ouvrirLignes: () -> Unit,
+    ouvrirCarte: () -> Unit,
+    ouvrirAlertes: () -> Unit,
+    ouvrirProfil: () -> Unit
 ) {
 
     var destination by remember {
@@ -132,7 +304,7 @@ fun HomeScreen(
 
             OutlinedButton(
                 onClick = {
-                    // temporairement
+                    ouvrirLignes()
                 },
                 modifier = Modifier.weight(1f)
             ) {
@@ -140,7 +312,9 @@ fun HomeScreen(
             }
 
             OutlinedButton(
-                onClick = {},
+                onClick = {
+                    ouvrirCarte()
+                },
                 modifier = Modifier.weight(1f)
             ) {
                 Text("📍 Carte")
@@ -157,14 +331,18 @@ fun HomeScreen(
         ) {
 
             OutlinedButton(
-                onClick = {},
+                onClick = {
+                    ouvrirAlertes()
+                },
                 modifier = Modifier.weight(1f)
             ) {
                 Text("⚠️ Alertes")
             }
 
             OutlinedButton(
-                onClick = {},
+                onClick = {
+                    ouvrirProfil()
+                },
                 modifier = Modifier.weight(1f)
             ) {
                 Text("👤 Profil")
@@ -172,7 +350,6 @@ fun HomeScreen(
         }
     }
 }
-
 //ecnran de recherche
 @Composable
 fun SearchScreen(
@@ -355,6 +532,7 @@ fun RouteResultCard(
         )
     }
 }
+//affiche toute la ligne du linge
 @Composable
 fun LinesScreen() {
 
@@ -390,6 +568,7 @@ fun LinesScreen() {
     }
 }
 
+//affiche une seule ligne de la ligne
 @Composable
 fun LineCard(
     ligne: com.example.itineraire.model.TransportLine
@@ -425,5 +604,86 @@ fun LineCard(
                 text = "Statut : ${ligne.statut}"
             )
         }
+    }
+}
+
+@Composable
+fun ProfileScreen() {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Text(
+            text = "👤 Mon profil",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(
+            modifier = Modifier.height(20.dp)
+        )
+
+        Text("Nom : Utilisateur")
+
+        Text("Email : utilisateur@madatransport.mg")
+
+        Spacer(
+            modifier = Modifier.height(20.dp)
+        )
+
+        Text("Rôle : Usager")
+    }
+}
+
+@Composable
+fun MapScreen() {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Text(
+            text = "📍 Carte",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
+
+        Text(
+            text = "La carte interactive sera développée à l'étape suivante."
+        )
+    }
+}
+
+@Composable
+fun AlertsScreen() {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Text(
+            text = "⚠️ Alertes",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
+
+        Text(
+            text = "Les signalements seront affichés ici."
+        )
     }
 }
